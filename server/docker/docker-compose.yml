@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-irrigation-system
+    restart: always
+    command: mongod --replSet rs0 --keyFile /etc/mongodb.key --bind_ip_all
+    environment:
+      MONGO_INITDB_DATABASE: admin
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_USER_DATABASE: irrigationSystem
+      MONGO_USER_USERNAME: irrigationSystem
+      MONGO_USER_PASSWORD: irrigati0nSyst3m123
+    volumes:
+      - mongo-data-irrigation-system:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./mongodb.key:/tmp/mongodb.key:ro
+    ports:
+      - "27018:27017"
+    entrypoint:
+      - bash
+      - -c
+      - |
+        cp /tmp/mongodb.key /etc/mongodb.key
+        chmod 400 /etc/mongodb.key
+        chown 999:999 /etc/mongodb.key
+        exec docker-entrypoint.sh $$@
+
+volumes:
+  mongo-data-irrigation-system:
