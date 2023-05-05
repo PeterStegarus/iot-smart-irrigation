@@ -52,16 +52,10 @@ passport.use(
     async (payload, done) => {
       try {
         const node = await Node.findById(payload.id);
-        if (!node) {
-          return done(null, false, { message: 'Node not found' });
-        }
 
-        if (node.status === 'off') {
-          node.status = 'on';
-          await node.save();
-        }
-
-        return done(null, _.omit(node._doc, ['__v']));
+        return node
+          ? done(null, node)
+          : done(null, false, { message: 'Node not found' });
       } catch (error) {
         return done(error);
       }

@@ -1,15 +1,18 @@
 import mongoose from 'mongoose';
 
 const nodeSchema = new mongoose.Schema({
+  key: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
-    index: true,
   },
   zone: {
     type: String,
     required: true,
-    index: true,
   },
   type: {
     type: String,
@@ -37,8 +40,6 @@ const nodeSchema = new mongoose.Schema({
     },
   }],
 });
-
-nodeSchema.index({ 'name': 1, 'zone': 1 }, { unique: true });
 
 const Node = mongoose.model('Node', nodeSchema);
 
