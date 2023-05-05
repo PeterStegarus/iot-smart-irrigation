@@ -34,6 +34,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          script: |
-            cd /home/ubuntu/dev/web/irrigation-system/server
-            pm2 restart all
+          script: pm2 restart irrigation-system
