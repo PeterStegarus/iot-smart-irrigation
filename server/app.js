@@ -29,7 +29,7 @@ app.use(morgan('dev'));   // Enable logging middleware
 app.use(express.json());  // Parse incoming JSON data
 
 passport.use(
-  new LocalStrategy({ usernameField: 'name' }, async (name, zone, done) => {
+  new LocalStrategy({ usernameField: 'name', passwordField: 'zone' }, async (name, zone, done) => {
     try {
       const node = await Node.findOne({ name: name.toLowerCase(), zone: zone.toLowerCase() });
       if (!node) {

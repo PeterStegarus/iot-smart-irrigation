@@ -4,10 +4,12 @@ const nodeSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    index: true,
   },
   zone: {
     type: String,
     required: true,
+    index: true,
   },
   type: {
     type: String,
@@ -35,6 +37,8 @@ const nodeSchema = new mongoose.Schema({
     },
   }],
 });
+
+nodeSchema.index({ 'name': 1, 'zone': 1 }, { unique: true });
 
 const Node = mongoose.model('Node', nodeSchema);
 
