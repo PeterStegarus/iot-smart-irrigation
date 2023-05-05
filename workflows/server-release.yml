@@ -1,0 +1,39 @@
+name: Release server
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - server
+concurrency: server-release
+jobs:
+  deploy-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+        with:
+          node-version: 18.15.0
+          cache: 'npm'
+          cache-dependency-path: ./server/package-lock.json
+      - run: npm ci
+        working-directory: ./server
+      - name: Upload to VM
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          rm: true
+          overwrite: true
+          strip_components: 1
+          source: ./server/*
+          target: /home/ubuntu/dev/web/irrigation-system/server/
+      - name: Restart server pm2 service
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd /home/ubuntu/dev/web/irrigation-system/server
+            pm2 restart all
