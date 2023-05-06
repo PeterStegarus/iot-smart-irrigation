@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,19 +14,36 @@
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-dark" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
-              <h2 class="fw-bold mb-2 text-uppercase text-white">Connect to WiFi</h2>
-              <p class="text-white-50 mb-5">Fill in your WiFi SSID and Password</p>
+              <div id="success" style="display: none;">
+                <h2 class="fw-bold text-uppercase text-white">Saved</h2>
+                <p class="text-white-50 mb-0">You may now close this window</p>
+              </div>
 
-              <form method="POST" action="/submit">
+              <form id="form" method="POST">
+                <h2 class="fw-bold mb-0 text-uppercase text-white">Connect to WiFi</h2>
+                <p class="text-white-50 mb-2">Fill in your WiFi SSID and Password</p>
                 <div class="form-floating mb-3">
                   <input name="ssid" type="text" class="form-control" id="floatingSsid" placeholder="WiFi SSID">
                   <label for="floatingInput">SSID</label>
                 </div>
-                <div class="form-floating">
-                  <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="WiFi Password">
+                <div class="form-floating mb-5">
+                  <input name="password" type="password" class="form-control" id="floatingPassword"
+                    placeholder="WiFi Password">
                   <label for="floatingPassword">Password</label>
                 </div>
-                <button class="btn btn-outline-light btn-lg px-5 mt-3" type="submit">Connect</button>
+
+                <h2 class="fw-bold mb-0 text-uppercase text-white">Connect to Swarm</h2>
+                <p class="text-white-50 mb-2">Fill in your Node's Name and Zone</p>
+                <div class="form-floating mb-3">
+                  <input name="name" type="text" class="form-control" id="floatingName" placeholder="Node Name">
+                  <label for="floatingName">Node Name</label>
+                </div>
+                <div class="form-floating">
+                  <input name="zone" type="text" class="form-control" id="floatingZone" placeholder="Zone">
+                  <label for="floatingZone">Node Zone</label>
+                </div>
+
+                <button class="btn btn-outline-light btn-lg px-5 mt-5" type="submit">Connect</button>
               </form>
             </div>
           </div>
@@ -33,5 +51,25 @@
       </div>
     </div>
   </section>
+
+  <script>
+    const form = document.querySelector('#form');
+    const success = document.querySelector('#success');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/submit');
+      xhr.onload = function () {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      };
+      xhr.send(formData);
+    });
+  </script>
 </body>
+
 </html>
