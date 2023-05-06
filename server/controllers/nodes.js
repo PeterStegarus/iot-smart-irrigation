@@ -81,7 +81,7 @@ export const getHumidity = async (req, res) => {
         )
     );
 
-    const averageHumidity = recentHumidityData.reduce((acc, humidity) => acc + parseInt(humidity), 0) / nodes.length;;
+    const averageHumidity = recentHumidityData.reduce((acc, humidity) => acc + parseInt(humidity), 0) / recentHumidityData.length;
 
     console.log(averageHumidity);
 
