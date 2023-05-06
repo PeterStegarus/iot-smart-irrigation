@@ -4,6 +4,7 @@ String wifiSsid;
 String wifiPassword;
 String nodeName;
 String nodeZone;
+String nodeType;
 
 String token;
 String response;
@@ -25,10 +26,26 @@ void setup() {
   setupHttpClient();
 }
 
-void loop() {
-  handleClient();
+void probeLoop() {
   if (canSendRequest && !token.isEmpty()) {
     response = sendHttpGet();
     Serial.println(response);
+  }
+}
+
+void actuatorLoop() {
+  if (canSendRequest && !token.isEmpty()) {
+    String humidity = String(analogRead(A0));
+    response = sendHttpPost(humidity);
+    Serial.println(response);
+  }
+}
+
+void loop() {
+  handleClient();
+  if (nodeType == "probe") {
+    probeLoop();
+  } else if (nodeType == "actuator") {
+    actuatorLoop();
   }
 }

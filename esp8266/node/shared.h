@@ -16,15 +16,16 @@ extern String wifiSsid;
 extern String wifiPassword;
 extern String nodeName;
 extern String nodeZone;
+extern String nodeType;
 
 extern String token;
 extern bool canSendRequest;
 
 void setupTimerInterrupt();
 void setupAp();
-void setupWifi();
 void setupWebServer();
 void setupHttpClient();
+bool setupWifi();
 
 void handleClient();
 

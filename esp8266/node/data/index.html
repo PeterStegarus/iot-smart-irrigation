@@ -10,13 +10,24 @@
 <body>
   <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="row justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-dark" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
+
+              <div id="pending" style="display: none;">
+                <h2 class="fw-bold text-uppercase text-white">Connecting...</h2>
+                <p class="text-white-50 mb-0">Refresh this page to submit new credentials</p>
+              </div>
+
               <div id="success" style="display: none;">
-                <h2 class="fw-bold text-uppercase text-white">Saved</h2>
+                <h2 class="fw-bold text-uppercase text-white">Connected</h2>
                 <p class="text-white-50 mb-0">You may now close this window</p>
+              </div>
+
+              <div id="failure" style="display: none;">
+                <h2 class="fw-bold text-uppercase text-white mb-0">Try again</h2>
+                <p class="text-white-50 mb-4">Wrong WiFi Credentials</p>
               </div>
 
               <form id="form" method="POST">
@@ -24,12 +35,12 @@
                 <p class="text-white-50 mb-2">Fill in your WiFi SSID and Password</p>
                 <div class="form-floating mb-3">
                   <input name="ssid" type="text" class="form-control" id="floatingSsid" placeholder="WiFi SSID">
-                  <label for="floatingInput">SSID</label>
+                  <label for="floatingInput">WiFi SSID</label>
                 </div>
                 <div class="form-floating mb-5">
                   <input name="password" type="password" class="form-control" id="floatingPassword"
                     placeholder="WiFi Password">
-                  <label for="floatingPassword">Password</label>
+                  <label for="floatingPassword">WiFi Password</label>
                 </div>
 
                 <h2 class="fw-bold mb-0 text-uppercase text-white">Connect to Swarm</h2>
@@ -38,9 +49,17 @@
                   <input name="name" type="text" class="form-control" id="floatingName" placeholder="Node Name">
                   <label for="floatingName">Node Name</label>
                 </div>
-                <div class="form-floating">
-                  <input name="zone" type="text" class="form-control" id="floatingZone" placeholder="Zone">
+                <div class="form-floating mb-3">
+                  <input name="zone" type="text" class="form-control" id="floatingZone" placeholder="Node Zone">
                   <label for="floatingZone">Node Zone</label>
+                </div>
+                <div class="d-flex text-uppercase text-white fw-bold">
+                  <div>probe</div>
+                  <label class="switch">
+                    <input name="type" type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                  <div>actuator</div>
                 </div>
 
                 <button class="btn btn-outline-light btn-lg px-5 mt-5" type="submit">Connect</button>
@@ -54,18 +73,28 @@
 
   <script>
     const form = document.querySelector('#form');
+    const pending = document.querySelector('#pending');
     const success = document.querySelector('#success');
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
+      form.style.display = 'none';
+      failure.style.display = 'none';
+      pending.style.display = 'block';
 
       const formData = new FormData(form);
       const xhr = new XMLHttpRequest();
 
       xhr.open('POST', '/submit');
       xhr.onload = function () {
-        form.style.display = 'none';
-        success.style.display = 'block';
+        if (xhr.status === 200) {
+          pending.style.display = 'none';
+          success.style.display = 'block';
+        } else {
+          pending.style.display = 'none';
+          failure.style.display = 'block';
+          form.style.display = 'block';
+        }
       };
       xhr.send(formData);
     });

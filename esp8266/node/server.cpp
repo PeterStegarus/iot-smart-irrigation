@@ -12,11 +12,15 @@ void handleSubmit() {
   wifiPassword = server.arg("password");
   nodeName = server.arg("name");
   nodeZone = server.arg("zone");
+  nodeType = server.arg("type") == "on" ? "actuator" : "probe";
 
-  setupWifi();
-  setTokenFromServer();
-
-  server.send(200, "text/plain", "");
+  bool connected = setupWifi();
+  if (connected) {
+    setTokenFromServer();
+    server.send(200, "text/plain", "");
+  } else {
+    server.send(401, "text/plain", "");
+  }
 }
 
 void setupWebServer() {

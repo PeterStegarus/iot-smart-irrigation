@@ -7,11 +7,18 @@ void setupAp() {
   Serial.println(WiFi.softAPIP());
 }
 
-void setupWifi() {
+bool setupWifi() {
   WiFi.begin(wifiSsid, wifiPassword);
-  while (WiFi.status() != WL_CONNECTED) {
+  for (int i = 0; i < 15 && WiFi.status() != WL_CONNECTED; i++) {
     delay(1000);
     Serial.println("Connecting...");
+  }
+
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Connection failed");
+    WiFi.disconnect();
+    setupAp();
+    return false;
   }
 
   WiFi.setAutoReconnect(true);
@@ -19,4 +26,5 @@ void setupWifi() {
 
   Serial.print("Connected. WiFi IP: ");
   Serial.println(WiFi.localIP());
+  return true;
 }
