@@ -5,7 +5,7 @@
 #include <FS.h>
 
 #define ONE_SECOND_TICKS 312500  // 312500 ticks * 3.2 us / tick = 1 second
-#define WIFI_AP_SSID "Probe"
+#define WIFI_AP_SSID "NODE-1"
 #define WIFI_AP_PASSWORD ""
 #define SWARM_URL "https://irrigation-system.blospera.live/api"
 
@@ -30,7 +30,7 @@ bool setupWifi();
 void handleClient();
 
 void setTokenFromServer();
-String sendHttpGet();
+int sendHttpGet();
 String sendHttpPost(String humidity);
 
 #endif

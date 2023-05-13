@@ -14,6 +14,18 @@ void handleSubmit() {
   nodeZone = server.arg("zone");
   nodeType = server.arg("type") == "on" ? "actuator" : "probe";
 
+  File file = SPIFFS.open("credentials.txt", "w");
+  if (!file) {
+    Serial.println("Failed to open file for writing!");
+  } else {
+    file.println(wifiSsid);
+    file.println(wifiPassword);
+    file.println(nodeName);
+    file.println(nodeZone);
+    file.println(nodeType);
+    file.close();
+  }
+
   bool connected = setupWifi();
   if (connected) {
     setTokenFromServer();
@@ -24,7 +36,6 @@ void handleSubmit() {
 }
 
 void setupWebServer() {
-  SPIFFS.begin();
   server.serveStatic("/index.html", SPIFFS, "/index.html");
   server.serveStatic("/style.css", SPIFFS, "/style.css");
   server.on("/", handleRoot);

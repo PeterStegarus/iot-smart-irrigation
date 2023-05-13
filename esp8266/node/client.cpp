@@ -3,7 +3,13 @@
 WiFiClientSecure client;
 HTTPClient http;
 
-void setupHttpClient() { client.setInsecure(); }
+void setupHttpClient() { 
+  client.setInsecure();
+
+  if (WiFi.status() == WL_CONNECTED) {
+    setTokenFromServer();
+  }
+}
 
 void setTokenFromServer() {
   String payload;
@@ -24,18 +30,22 @@ void setTokenFromServer() {
   token = String(doc["token"]);
 }
 
-String sendHttpGet() {
+int sendHttpGet() {
   canSendRequest = false;
+
+  StaticJsonDocument<200> doc;
+  String payload;
 
   String url = String(SWARM_URL);
   url += "/nodes/humidity";
   http.begin(client, url);
   http.addHeader("Authorization", "Bearer " + token);
   http.GET();
-  String payload = http.getString();
+  payload = http.getString();
   http.end();
 
-  return payload;
+  deserializeJson(doc, payload);
+  return doc["humidity"].as<int>();
 }
 
 String sendHttpPost(String humidity) {
