@@ -65,9 +65,10 @@ void probeLoop() {
 
 void actuatorLoop() {
   humidity = sendHttpGet();
+  Serial.print("Humidity: ");
   Serial.println(humidity);
   digitalWrite(5, humidity > 1000 ? HIGH : LOW);
-  delay(500);
+  delay(1000);
   digitalWrite(5, LOW);
 }
 
