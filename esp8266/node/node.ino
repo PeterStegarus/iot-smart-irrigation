@@ -56,7 +56,7 @@ void setup() {
 }
 
 void probeLoop() {
-  humidity = analogRead(A0);
+  humidity = NORMALIZE_ADC_VALUE(analogRead(A0));
   Serial.print(humidity);
   Serial.print(" ");
   response = sendHttpPost(String(humidity));
@@ -67,7 +67,7 @@ void actuatorLoop() {
   humidity = sendHttpGet();
   Serial.print("Humidity: ");
   Serial.println(humidity);
-  digitalWrite(5, humidity > 1000 ? HIGH : LOW);
+  digitalWrite(5, humidity && humidity < 30 ? HIGH : LOW);
   delay(1000);
   digitalWrite(5, LOW);
 }

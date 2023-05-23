@@ -5,9 +5,11 @@
 #include <FS.h>
 
 #define ONE_SECOND_TICKS 312500  // 312500 ticks * 3.2 us / tick = 1 second
+#define MAX_ADC_VALUE 1024
+#define NORMALIZE_ADC_VALUE(x) (MAX_ADC_VALUE - x) * 100 / MAX_ADC_VALUE
+#define SWARM_URL "https://irrigation-system.blospera.live/api"
 #define WIFI_AP_SSID "NODE-1"
 #define WIFI_AP_PASSWORD ""
-#define SWARM_URL "https://irrigation-system.blospera.live/api"
 
 #ifndef IRRIGATION_SYSTEM_SHARED
 #define IRRIGATION_SYSTEM_SHARED
